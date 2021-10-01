@@ -4,7 +4,7 @@ addEventListener('fetch', event => {
 
 async function handleRequest(request) {
   let endpoint = "https://api.waqi.info/feed/geo:"
-  const token = "" //Use a token from https://aqicn.org/api/
+  const token = "" 
   let html_style = `body{padding:6em; font-family: sans-serif;} h1{color:#f6821f}`
   
   let html_content = "<h1>Weather 🌦</h1>"
