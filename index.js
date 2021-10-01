@@ -1,48 +1,61 @@
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
-
-async function handleRequest(request) {
-  let endpoint = "https://api.waqi.info/feed/geo:"
-  const token = "" 
-  let html_style = `body{padding:6em; font-family: sans-serif;} h1{color:#f6821f}`
+// get weather
+function getWeather() {
   
-  let html_content = "<h1>Weather 🌦</h1>"
-
-  latitude = request.cf.latitude
-  longitude = request.cf.longitude
-  endpoint+= `${latitude};${longitude}/?token=${token}`
-  const init = {
-    headers: {
-      "content-type": "application/json;charset=UTF-8",
-    },
-  }
-
-  const response = await fetch(endpoint,init)
-  const content = await response.json()
-
-  html_content += `<p>This is a demo using Workers geolocation data. </p>`
-  html_content += `You are located at: ${latitude},${longitude}.</p>`
-  html_content += `<p>Based off sensor data from <a href="${content.data.city.url}">${content.data.city.name}</a>:</p>`
-  html_content += `<p>The AQI level is: ${content.data.aqi}.</p>`
-  html_content += `<p>The N02 level is: ${content.data.iaqi.no2.v}.</p>`
-  html_content += `<p>The O3 level is: ${content.data.iaqi.o3.v}.</p>`
-  html_content += `<p>The temperature is: ${content.data.iaqi.t.v}°C.</p>`
-
-  let html = `
-<!DOCTYPE html>
-<head>
-  <title>Geolocation: Weather</title>
-</head>
-<body>
-  <style>${html_style}</style>
-  <div id="container">
-  ${html_content}
-  </div>
-</body>`
-
-  return new Response(html, {
-    headers: {
-      "content-type": "text/html;charset=UTF-8",
-    },})
+  // get weather
+  fetch('https://api.openweathermap.org/data/2.5/weather?q=London&appid=e0d8a1b6c7f8b3c5c7f0f0a2b7a4a7a5')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // set weather
+      setWeather(data);
+    });
 }
+
+// set weather
+function setWeather(data) {
+
+  // set weather
+  let weather = data.weather[0].main;
+  let icon = data.weather[0].icon;
+  let temp = Math.round(data.main.temp - 273.15);
+  let city = data.name;
+  let country = data.sys.country;
+  let wind = data.wind.speed;
+  let humidity = data.main.humidity;
+  let sunrise = data.sys.sunrise;
+  let sunset = data.sys.sunset;
+  let timezone = data.timezone;
+  let description = data.weather[0].description;
+
+  // set weather
+  document.getElementById('weather').innerHTML = weather;
+  document.getElementById('icon').innerHTML = icon;
+  document.getElementById('temp').innerHTML = temp + '&deg;';
+  document.getElementById('city').innerHTML = city;
+  document.getElementById('country').innerHTML = country;
+  document.getElementById('wind').innerHTML = wind + ' m/s';
+  document.getElementById('humidity').innerHTML = humidity + '%';
+  document.getElementById('sunrise').innerHTML = sunrise;
+  document.getElementById('sunset').innerHTML = sunset;
+  document.getElementById('timezone').innerHTML = timezone;
+  document.getElementById('description').innerHTML = description;
+}
+
+// get weather
+getWeather();
+
+// set interval
+setInterval(getWeather, 300000);
+
+// set interval
+setInterval(function() {
+  // get time
+  let date = new Date();
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let seconds = date.getSeconds();
+
+  // set time
+  document.getElementById('time').innerHTML = hours + ':' + minutes + ':' + seconds;
+}
+, 1000);
